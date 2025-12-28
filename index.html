@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join My Live Class</title>
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --bg: #0f172a;
+            --glass: rgba(255, 255, 255, 0.08);
+            --text: #f8fafc;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.35;
+            animation: move 25s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-30%, -30%); }
+            to { transform: translate(30%, 30%); }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 45px 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 12px #4ade80;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.9); }
+        }
+
+        h1 { font-size: 1.9rem; margin-bottom: 12px; font-weight: 600; }
+        p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 35px; }
+
+        .btn-join {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 18px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.15rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 12px 20px -5px rgba(0, 210, 255, 0.4);
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+
+        .btn-join:hover:not(.disabled) {
+            transform: translateY(-5px);
+            filter: brightness(1.15);
+        }
+
+        .btn-join.disabled {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            background: #334155 !important;
+            box-shadow: none !important;
+            pointer-events: none;
+        }
+
+        .update-time {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .admin-controls {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-admin {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-admin:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-remove {
+            color: var(--error);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            padding: 35px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px; }
+        input { width: 100%; background: #0f172a; border: 1px solid #334155; padding: 14px; border-radius: 12px; color: white; outline: none; }
+        input:focus { border-color: var(--primary); }
+
+        .btn-save { width: 100%; background: white; color: #0f172a; border: none; padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; }
+        .btn-cancel { width: 100%; background: transparent; color: #64748b; border: none; margin-top: 15px; cursor: pointer; font-size: 0.85rem; }
+
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: var(--success);
+            color: white;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toast">Action Successful!</div>
+    <div class="blob"></div>
+
+    <div class="container">
+        <div class="glass-card">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                LIVE CLASS PORTAL
+            </div>
+
+            <h1 id="main-heading">Zoom Meeting</h1>
+            <p id="sub-text">Welcome! Click the button below to join the session.</p>
+
+            <a id="join-btn" href="#" target="_blank" class="btn-join">
+                <i class="fas fa-video"></i> Join Live Now
+            </a>
+
+            <div class="update-time" id="timestamp">No link updated yet</div>
+        </div>
+
+        <div class="admin-controls">
+            <button class="btn-admin" onclick="openModal('upload')">
+                <i class="fas fa-plus"></i> Upload Link
+            </button>
+            <button class="btn-admin btn-remove" id="remove-btn" onclick="openModal('remove')">
+                <i class="fas fa-trash"></i> Remove Link
+            </button>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom: 20px; text-align: center;">Admin Access</h2>
+            
+            <div class="input-group">
+                <label>Admin Password</label>
+                <input type="password" id="admin-pass" placeholder="Enter password">
+            </div>
+
+            <div id="url-group" class="input-group">
+                <label>New Zoom Link</label>
+                <input type="text" id="new-link" placeholder="https://zoom.us/j/...">
+            </div>
+
+            <button class="btn-save" id="confirm-btn">Confirm</button>
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Use the password you specified
+        const MASTER_PASSWORD = "malikawais"; 
+        let currentMode = ""; 
+
+        const joinBtn = document.getElementById('join-btn');
+        const timestamp = document.getElementById('timestamp');
+        const mainHeading = document.getElementById('main-heading');
+        const subText = document.getElementById('sub-text');
+        const adminModal = document.getElementById('admin-modal');
+        const urlGroup = document.getElementById('url-group');
+        const modalTitle = document.getElementById('modal-title');
+        const removeBtn = document.getElementById('remove-btn');
+
+        function loadData() {
+            const savedLink = localStorage.getItem('zoom_link');
+            const savedTime = localStorage.getItem('zoom_time');
+
+            if (savedLink && savedLink.trim() !== "") {
+                joinBtn.href = savedLink;
+                joinBtn.classList.remove('disabled');
+                joinBtn.innerHTML = '<i class="fas fa-video"></i> Join Live Now';
+                mainHeading.innerText = "Zoom Meeting";
+                subText.innerText = "Welcome! Click the button below to join the session.";
+                timestamp.innerText = `Last Updated: ${savedTime}`;
+                removeBtn.style.display = "inline-flex";
+            } else {
+                joinBtn.href = "#";
+                joinBtn.classList.add('disabled');
+                joinBtn.innerHTML = '<i class="fas fa-clock"></i> No Active Link';
+                mainHeading.innerText = "No Classes Scheduled";
+                subText.innerText = "Teacher has not uploaded a link yet.";
+                timestamp.innerText = "Waiting for update...";
+                removeBtn.style.display = "none";
+            }
+        }
+
+        window.openModal = (mode) => {
+            currentMode = mode;
+            adminModal.style.display = 'flex';
+            if (mode === 'remove') {
+                modalTitle.innerText = "Confirm Removal";
+                urlGroup.style.display = "none";
+            } else {
+                modalTitle.innerText = "Upload New Link";
+                urlGroup.style.display = "block";
+            }
+        };
+
+        window.closeModal = () => {
+            adminModal.style.display = 'none';
+            document.getElementById('admin-pass').value = '';
+            document.getElementById('new-link').value = '';
+        };
+
+        document.getElementById('confirm-btn').onclick = () => {
+            const pass = document.getElementById('admin-pass').value;
+            const url = document.getElementById('new-link').value.trim();
+
+            if (pass !== MASTER_PASSWORD) {
+                alert("Incorrect Password!");
+                return;
+            }
+
+            if (currentMode === 'upload') {
+                if (!url || !url.startsWith('http')) {
+                    alert("Please enter a valid URL (https://...)");
+                    return;
+                }
+                localStorage.setItem('zoom_link', url);
+                localStorage.setItem('zoom_time', new Date().toLocaleTimeString());
+                showToast("Link Uploaded Successfully!");
+            } else if (currentMode === 'remove') {
+                localStorage.removeItem('zoom_link');
+                localStorage.removeItem('zoom_time');
+                showToast("Link Removed Successfully!");
+            }
+
+            loadData();
+            closeModal();
+        };
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // Initialize immediately
+        loadData();
+    </script>
+</body>
+</html>
